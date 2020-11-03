@@ -3,17 +3,16 @@ const mongoose = require('mongoose')
 require('dotenv/config')
 const app = express();
 
+
+// Import Routes
+const todosRoute = require('./routes/todos')
+
 //Middleware
 app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
 //ROUTES
-app.get('/', (req, res) => {
-    res.send('Hello world!')
-})
-
-app.get('/todos', (req, res) => {
-
-})
+app.use('/todos', todosRoute)
 
 //Connect to db
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
