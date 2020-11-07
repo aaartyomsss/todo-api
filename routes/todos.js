@@ -54,13 +54,24 @@ router.delete('/:id', (req, res) => {
 
 //Update todos status
 router.patch('/:id', (req, res) => {
-    Todo.updateOne({ _id: req.params.id }, { $set: { done: req.body.done } })
+    Todo.updateOne({ _id: req.params.id }, { $set: { important: req.body.important } })
         .then(result => {
             console.log(result)
             res.json(result)
         })
         .catch(e => res.json({ message: e }))
 
+})
+
+//Getting a single post
+router.get('/:id', (req, res) => {
+    Todo.findById(req.params.id)
+        .then(result => {
+            res.json(result)
+        })
+        .catch(e => {
+            res.json({ message: e })
+        })
 })
 
 module.exports = router
