@@ -2,6 +2,9 @@ const { json } = require('express')
 const express = require('express')
 const Todo = require('../models/Todo')
 const router = express.Router()
+const jwt = require('jsonwebtoken')
+const User = require('../models/User')
+require('express-async-errors')
 
 // Getting data
 router.get('/', (req, res) => {
@@ -17,27 +20,32 @@ router.get('/', (req, res) => {
 })
 
 // Adding todo
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+    const decodedToken = jwt.verify(req.token, process.env.SECRET)
+    
+    if (!req.token || !decodedToken.id) {
+        return res.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+    console.log(user)
     const body = req.body
-    console.log(body)
     if (body.todo === undefined) {
-        console.log('body is empty')
         return res.status(400).json({
             error: 'Content missing'
         })
     }
-    const post = new Todo({
+    const newTodo = new Todo({
         todo: body.todo
-
     })
 
-    post.save()
-        .then(data => {
-            res.json(data.toJSON())
-        })
-        .catch(e => {
-            res.json({ message: e })
-        })
+    const savedTodo = await newTodo.save()
+
+    //Adding todo to user's scheme
+    user.todos = user.todos.concat(savedTodo._id)
+    await user.save()
+
+    res.json(savedTodo)
 
 
 })

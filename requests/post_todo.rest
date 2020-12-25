@@ -1,6 +1,7 @@
-POST http://localhost:3000/todos
+POST http://localhost:3001/todos
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFydG8iLCJpZCI6IjVmZTVjNTRkOGZlNGM4MjBkZDZkMTg2YyIsImlhdCI6MTYwODg5NTk5M30.XcchfyELsrZWaBJB3tzEgzIBhmRSlHJ8qaw8Fvm03fc
 
 {
-    "todo": "consider that it is working"
+    "todo": "todo with logined user"
 }
