@@ -14,13 +14,13 @@ userRouter.post('/', async (req, res) => {
     const user = await User.findOne({ username : body.username})
     const user2 = await User.findOne({ email: body.email })
     if (user) {
-        return res.status(400).json({ message: 'User with following username exists'})
+        return res.status(400).json({ error: 'User with following username exists'})
     } 
     if (user2) {
-        return res.status(400).json({ message: 'User with following email exists'})
+        return res.status(401).json({ error: 'User with following email exists'})
     }
     if (body.password.length < 6) {
-        return res.status(400).json({ message: 'Password length is less that 6 symbols'})
+        return res.status(401).json({ error: 'Password length is less that 6 symbols'})
     }
 
     const hashRounds = 10
