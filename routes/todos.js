@@ -36,7 +36,8 @@ router.post('/', async (req, res) => {
         })
     }
     const newTodo = new Todo({
-        todo: body.todo
+        todo: body.todo,
+        user: user._id
     })
 
     const savedTodo = await newTodo.save()
@@ -51,13 +52,23 @@ router.post('/', async (req, res) => {
 })
 
 // Deleting todo 
-router.delete('/:id', (req, res) => {
-    Todo.findByIdAndRemove(req.params.id)
-        .then(result => {
-            console.log(result)
-            res.status(204).end()
-        })
-        .catch(e => res.json({ message: e }))
+router.delete('/:id', async (req, res) => {
+    const decodedToken = jwt.verify(req.token, process.env.SECRET)
+
+    if (!req.token || !decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const user = await User.findById(decodedToken.id)
+    const blogToDelete = await Todo.findById(req.params.id)
+
+    if (blogToDelete.user.toString() === user.id.toString()) {
+        const removed = await Todo.remove(blogToDelete)
+        user.todos = user.todos.splice(-1)
+    }
+
+
+    res.status(204).end()
 })
 
 //Update todos status

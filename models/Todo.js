@@ -14,6 +14,10 @@ const TodoSchema = mongoose.Schema({
     important: {
         type: Boolean,
         default: false
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 })
 
