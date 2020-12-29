@@ -14,6 +14,7 @@ const loginRouter = require('./routes/login');
 //Middleware
 app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
 app.use(express.urlencoded({extended:true}))
 app.use(middleware.tokenExtractor)
 
@@ -26,5 +27,5 @@ app.use('/users', userRouter)
 mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 
 //Listening to the server
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT)
